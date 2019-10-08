@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: springboot-pod # <-------- Rename the pod
+  labels:
+    app: myapp # <--------------- Rename the label
+spec:
+  imagePullSecrets:
+  - name: devenablement-workshop-pull-secret
+  containers:
+  - name: springboot-container
+    image: registry.ford.com/jpotte46/springboot-hello-world:0.0.1
+    ports:
+    - containerPort: 8080
+      name: http
+    resources:
+      requests:
+        memory: "300Mi"
+        cpu: "100m"
+      limits:
+        memory: "500Mi"
+        cpu: "200m"
