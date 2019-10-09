@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: glits-service # <--- Rename the service
+  labels:
+    app: glits-app # <------ Rename the label
+spec:
+  type: ClusterIP
+  selector:
+    app: glits-app # <------ Rename to match your pod labels
+  ports:
+  - protocol: "TCP"
+    name: http
+    port: 8080
+    targetPort: 8080

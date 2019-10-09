@@ -1,0 +1,18 @@
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: glits-route # <------------------- Rename the route
+  labels:
+    app: glits-app # <-------------------- Rename the label
+spec:
+  host: glits-app.app.caas.ford.com # <--- Rename the host
+  port:
+    targetPort: 8080
+  tls:
+    termintaion: edge
+    insecureEdgeTerminationPolicy: Redirect
+  to:
+    kind: Service
+    name: glits-service # <--- Rename to match your service name
+    weight: 100
+  wildcardPolicy: None

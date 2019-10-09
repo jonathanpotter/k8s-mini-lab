@@ -1,9 +1,9 @@
 apiVersion: v1
 kind: Pod
 metadata:
-  name: springboot-pod # <-------- Rename the pod
+  name: glits-pod # <-------- Rename the pod
   labels:
-    app: myapp # <--------------- Rename the label
+    app: glits-app # <------- Rename the label
 spec:
   imagePullSecrets:
   - name: devenablement-workshop-pull-secret
@@ -13,6 +13,11 @@ spec:
     ports:
     - containerPort: 8080
       name: http
+    env:
+      - name: POD_IP
+        valueFrom:
+          fieldRef:
+            fieldPath: status.podIP
     resources:
       requests:
         memory: "300Mi"
