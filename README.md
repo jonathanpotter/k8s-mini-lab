@@ -46,7 +46,7 @@ oc login https://api.caas.ford.com
 # Your username
 # Your password
 
-# Target the devenablement-dev project. You will see an "*" next to project you are currently targeting.
+# Target the devenablement-dev project. You will see an "*" next to the targeted project.
 oc project devenablement-dev
 oc projects
 ```
@@ -75,7 +75,7 @@ oc describe pod YOUR_POD_NAME
 oc logs -f YOUR_POD_NAME
 ```
 
-It will take a couple minutes for your app to start. Keep checking the logs until you the message `Tomcat started on port(s): 8080 (http) with context path ''`. End the log streaming with Ctrl+C command.
+It will take a couple minutes for your app to start. Keep checking the logs until you the message `Tomcat started on port(s): 8080 (http) with context path ''`. End the log streaming with Ctrl+C.
 
 Then test that your app is responding.
 
@@ -110,7 +110,7 @@ oc get deployments
 # Continually run (or watch) the command with -w.
 oc get pods -l app=YOUR_APP_NAME -w
 
-# Run the command above until the output shows the pod status is Running. Stop the command with Ctrl+C command.
+# Run the command above until the output shows the pod status is Running. Stop the command with Ctrl+C.
 # Then get your pod's IP address.
 oc describe pods -l app=YOUR_APP_NAME | grep IP
     IP: 19.2.28.230
