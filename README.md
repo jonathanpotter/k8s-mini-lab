@@ -3,7 +3,7 @@
 This is a hands-on lab where you will learn the basics of deploying containerized applications on the CaaS platform.  We’ll provide a live CaaS environment where you can deploy something small, scale it up, then deploy a new version without downtime.
 
 ## Pre-requisites
-- Laptop with Ford GitHub access.
+- Laptop with Ford GitHub access and permissions to download/run an `.exe` file.
 - Familiarity with command-line activities (moving files, setting `PATH` environment variable, cloning a git repo, etc...)
 
 ## Exercise 1 - Clone the Lab Repo
@@ -19,21 +19,26 @@ cd ./glits-lab
 ## Exercise 2 - Install RedHat OpenShift Command-Line Interface
 You need to install the `oc` cli in order to issue commands to CaaS.
 
-- Download version `3.11.135` from https://files.caas.ford.com:9443/oc-cli/. Select the file which name matches your system: Windows, MacOS, or Linux.
-- For Windows, unzip the downloaded file and copy the executable binary `/bin/oc.exe` somewhere on your system.
-- For MacOS/Linux, you can put `oc` into `/usr/local/bin` with `tar -xvzf ~/Downloads/oc-3.11.135-macosx.tar.gz -C /usr/local/bin`.
+- Download version `3.11.135` from https://files.caas.ford.com:9443/oc-cli/. Select the file with the name matching your system: Windows, MacOS, or Linux.
+- For Windows
+  - Open the downloaded zip file.
+  - Copy the executable binary `oc.exe` somewhere on your system.
+  - Optionally, you can set your `PATH` environment variable to include the directory where you saved `oc.exe`.
+- For MacOS/Linux
+  - Put `oc` into `/usr/local/bin` with `tar -xvzf ~/Downloads/oc-3.11.135-macosx.tar.gz -C /usr/local/bin`.
+  - Optionally, you can set your `PATH` environment variable to include `/usr/local/bin`.
 
-Test that you are configured correctly by running `oc version` from the terminal. It should look similar to:
+Test that you are configured correctly by opening a terminal (GitBash, cmd, PowerShell, iTerm2, etc...) and running `oc version` from the terminal.
+
+If you have not set the `PATH` env variable, you'll need to use the full path to the location of `oc.exe`, for example `C:\Users\jpotte46\Desktop\oc.exe version`.
+
+Your output should look similar to:
 
 ```
 oc version
     oc v3.11.135
     kubernetes v1.11.0+d4cacc0
     features: Basic-Auth
-
-    Server https://api.caas.ford.com:443
-    openshift v3.11.135
-    kubernetes v1.11.0+d4cacc0
 ```
 
 ## Exercise 3 - Authenticate to CaaS
