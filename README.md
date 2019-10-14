@@ -39,14 +39,15 @@ oc version
 ## Exercise 3 - Authenticate to CaaS
 Authenticate to Ford's CaaS platform with `oc`.
 
-You have been granted temporary access to an environment on Ford's CaaS platform. You can login with your CDSID and password.
+You have been granted temporary access to an environment on Ford's CaaS platform. You can login with your CDSID and password. Then target the `devenablement-dev` project.
 
 ```
 oc login https://api.caas.ford.com
 # Your username
 # Your password
 
-# Check that you are targeting the devenablement-dev project. You should see an "*".
+# Target the devenablement-dev project. You will see an "*" next to project you are currently targeting.
+oc project devenablement-dev
 oc projects
 ```
 
@@ -74,7 +75,7 @@ oc describe pod YOUR_POD_NAME
 oc logs -f YOUR_POD_NAME
 ```
 
-It will take a couple minutes for your app to start. Keep checking the logs until you the message `Tomcat started on port(s): 8080 (http) with context path ''`. The end the log streaming with Ctrl+C command.
+It will take a couple minutes for your app to start. Keep checking the logs until you the message `Tomcat started on port(s): 8080 (http) with context path ''`. End the log streaming with Ctrl+C command.
 
 Then test that your app is responding.
 
@@ -104,90 +105,40 @@ oc create -f ./deployment.yaml
 
 oc get deployments
 
-oc get pods
+# Any oc command output can be filtered by a label with -l.
+# Filter the results where label app=YOUR_APP_NAME as defined in deployment.yaml.
+# Continually run (or watch) the command with -w.
+oc get pods -l app=YOUR_APP_NAME -w
 
-# Get your pod's IP address
-oc describe pod YOUR_POD_NAME | grep IP
+# Run the command above until the output shows the pod status is Running. Stop the command with Ctrl+C command.
+# Then get your pod's IP address.
+oc describe pods -l app=YOUR_APP_NAME | grep IP
     IP: 19.2.28.230
 
 # Curl your pod's IP address on port 8080 at /api/v1/hello
 curl 19.2.28.230:8080/api/v1/hello
     {"result":{"greeting":"Hello from pod 19.2.28.230"},"error":null}
-
-# Delete a running pod and CaaS will recreate it.
-oc delete pod YOUR_POD_NAME
-oc get pods
 ```
 
-CaaS will start a new pod to replace the one that you deleted.
+Now open a new terminal window where you will watch the pod be deleted. CaaS will then start a new pod to replace the one that you deleted.
+
+```
+# Watch pods in new terminal.
+oc get pods -l app=YOUR_APP_NAME -w
+
+# In the original terminal, delete a running pod and CaaS will recreate it.
+oc delete pod YOUR_POD_NAME
+```
+
+Once you have deleted the pod, you can close the new terminal window.
 
 ## Exercise 6 - Scale Up for High Availability
-In the last exercise, you specified only 1 pod instance, so there was a service outage during the time between deletion of the old pod and startup of a replacement pod. To provide greater availability, you always want to run 2 or more instances in production. Kubernetes calls pod instances replicas.
+In the last exercise, you specified only 1 pod instance, so your app experienced a service outage during the time between deletion of the old pod and startup of a replacement pod. To provide greater availability, you always want to run 2 or more instances in production. (Note that Kubernetes calls pod instances "replicas" so you'll hear the words instances and replicas used interchangeably in conversation.)
 
 ```
 # Scale up the deployment from 1 pod to 2 pods
 oc scale --replicas=2 deployment YOUR_DEPLOYMENT_NAME
 
-oc get pods
+# See that the deployment now has two pods.
+oc get pods -l app=YOUR_APP_NAME
 ```
-
-## Exercise 7 - Configure Load Balancing
-Now that there are multiple instances of your pods, you will want load balancing between them. This way a client can call a single hostname and will be routed to a healthy pod replica. This is done in CaaS though a Service object and a Route object.
-
-The Service object is a load balancer. The Service appears as a single IP to clients and load balances inbound traffic to multiple endpoints where your pod instances are the endpoints.
-
-The Route object exposes a Service object as an externally-reachable hostname.
-
-You'll create the Service object first. Review the `service.yaml` manifest file.
-
-Again, in the `metadata` section, edit the Service's `name` value and the `app` label value to something unique by replacing `glits` with your CDSID. For example, I use `name: jpotte46-service` and `jpotte46-app`. Also, in the `spec` section, edit the value of `selector.app` by replacing `glits` with your CDSID.
-
-Note the value of `selector.app` should equal the value of your Pods' labels `app`. This will associate this Service with those Pods causing inbound traffic to the Service to be forwarded to the Pods. Save the file.
-
-```
-# Create the service
-oc create -f ./service.yaml
-
-# Note the IP address of your service
-oc get services
-    NAME                     TYPE        CLUSTER-IP    EXTERNAL-IP   PORT(S)
-    YOUR_SERVICE_NAME        ClusterIP   19.2.46.66    <none>        8080/TCP
-
-# Curl your service's IP address on port 8080 at /api/v1/hello
-curl 19.2.46.66:8080/api/v1/hello
-    {"result":{"greeting":"Hello from pod 19.2.28.230"},"error":null}
-
-# Run the same curl a few times and see that responses come back from each pod.
-curl 19.2.46.66:8080/api/v1/hello
-    {"result":{"greeting":"Hello from pod 19.2.29.59"},"error":null}
-curl 19.2.46.66:8080/api/v1/hello
-    {"result":{"greeting":"Hello from pod 19.2.28.230"},"error":null}
-```
-## Exercise 8
-
-Now that your have a single IP address for your app, you will want to provide an externally-reachable hostname. At Ford, we do this with an OpenShift Route object.
-
-Review the `route.yaml` manifest file.
-
-In the `metadata` section, edit the Route's `name` value and the `app` label value to something unique by replacing `glits` with your CDSID. For example, I use `name: jpotte46-route` and `jpotte46-app`.
-
-In the `spec` section, edit the value of `host` by replacing `glits` with your CDSID. For example, I use `host: jpotte46-app.app.caas.ford.com`. This causes traffic sent to this DNS hostname to be service by this Route object.
-
-In the `spec` section, edit the value of `to.name` by replacing `glits` with your CDSID. Note the value of `to.name` should equal the value of your Service's `name`. This will associate this Route with your Service causing inbound traffic to the Service to be forwarded to the Pods. Save the file.
-
-```
-# Create the route
-oc create -f route.yaml
-
-oc get routes
-
-# Curl the route a few times using your route name
-# Now use HTTPS and not port 8080
-curl https://jpotte46-app.app.caas.ford.com/api/v1/hello
-    {"result":{"greeting":"Hello from pod 19.2.29.59"},"error":null}
-curl https://jpotte46-app.app.caas.ford.com/api/v1/hello
-    {"result":{"greeting":"Hello from pod 19.2.28.230"},"error":null}
-```
-
-## Exercise 9
-deploy a new version without downtime
