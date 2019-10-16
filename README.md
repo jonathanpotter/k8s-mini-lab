@@ -47,19 +47,20 @@ Authenticate to Ford's CaaS platform with `oc`.
 You have been granted temporary access to an environment on Ford's CaaS platform. You can login with your CDSID and password. Then target the `devenablement-dev` project.
 
 ```
+# Login to CaaS.
+# If you get "error: Service Unavailable", then you have a proxy error. Raise your hand for help.
 oc login https://api.caas.ford.com
 # Your username
 # Your password
 
 # Target the devenablement-dev project. You will see an "*" next to the targeted project.
 oc project devenablement-dev
-oc projects
 ```
 
 If you are using GitBash on Windows, the `oc` cli has a bug where it outputs your password to the terminal. You can avoid this with the `winpty` utility replacing the command above with `winpty oc login https://api.caas.ford.com`.
 
 ## Review of Ford's Container Image Registry
-Ford's Container Image Registry is at https://registry.ford.com. For this lab, I have created a container image and uploaded it there to a repository at https://registry.ford.com/repository/jpotte46/springboot-hello-world. The image is of a minimal "Hello World" web service. The image is a binary image that contains all dependencies required to run the app. You can run the image locally with a tool like `docker`, or you can deploy this container image to CaaS.
+Ford's Container Image Registry is at https://registry.ford.com. Note that you will not have access to it until you sign up when you procure your CaaS environment. However, for this lab, I have already created a [container image](https://registry.ford.com/repository/jpotte46/springboot-hello-world) for you and uploaded it. The image contains a minimal "Hello World" web service.
 
 ## Exercise 4 - Create a Pod
 You will deploy the container image to CaaS using a Pod object type. Review the `pod.yaml` manifest file.
@@ -76,13 +77,15 @@ oc get pods
 # View the events of your pod.
 oc describe pod YOUR_POD_NAME
 
-# View the app logs of your pod.
+# Stream the app logs of your pod. (You can stop streaming with Ctrl+C)
 oc logs -f YOUR_POD_NAME
 ```
 
-It will take a couple minutes for your app to start. Keep checking the logs until you the message `Tomcat started on port(s): 8080 (http) with context path ''`. End the log streaming with Ctrl+C.
+It will take a couple minutes for your app to start. Keep checking the logs until you the message `Tomcat started on port(s): 8080 (http) with context path ''`.
 
-Then test that your app is responding.
+Once the app has started, end the log streaming with Ctrl+C.
+
+Then test that your app is responding using curl or a web browser. **Modify the curl command below to use your own pod's IP address.**
 
 ```
 # Get your pod's IP address
