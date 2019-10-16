@@ -65,7 +65,7 @@ Ford's Container Image Registry is at https://registry.ford.com. Note that you w
 ## Exercise 4 - Create a Pod
 You will deploy the container image to CaaS using a Pod object type. Review the `pod.yaml` manifest file.
 
-In the `metadata` section, edit the Pod's `name` value and the `app` label value to something unique by replacing `glits` with your CDSID. For example, I use `name: jpotte46-pod` and `jpotte46-app`. Save the file.
+In the `metadata` section, edit the Pod's `name` value and the `app` label value to something unique by replacing `glits` with your CDSID. For example, I use `name: jpotte46-pod` and `jpotte46-app`. **Save the file.**
 
 ```
 # Deploy your pod.
@@ -105,7 +105,7 @@ Pods can fail. If they do, they will not recover themselves; however, CaaS will 
 
 Review the `deployment.yaml` manifest file.
 
-Again, in the `metadata` section, edit the Deployment's `name` value and the `app` label value to something unique by replacing `glits` with your CDSID. For example, I use `name: jpotte46-deployment` and `jpotte46-app`. Also, in the `spec` section, edit the values of `selector.matchLabels.app` and `template.metadata.labels.app` replace `glits` with your CDSID. Save the file.
+Again, in the `metadata` section, edit the Deployment's `name` value and the `app` label value to something unique by replacing `glits` with your CDSID. For example, I use `name: jpotte46-deployment` and `jpotte46-app`. Also, in the `spec` section, edit the values of `selector.matchLabels.app` and `template.metadata.labels.app` replace `glits` with your CDSID. **Save the file.**
 
 ```
 # Create the deployment
