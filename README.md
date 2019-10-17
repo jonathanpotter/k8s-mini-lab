@@ -150,3 +150,6 @@ oc scale --replicas=2 deployment YOUR_DEPLOYMENT_NAME
 # See that the deployment now has two pods.
 oc get pods -l app=YOUR_APP_NAME
 ```
+
+## Free Workshop
+You can learn more by attending the free CaaS Workshop. Register [online](https://it2.spt.ford.com/sites/dev/Lists/RegisterForEvent/newform.aspx). The workshop is offered monthly.
