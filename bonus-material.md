@@ -2,7 +2,7 @@
 If you completed the previous exercises and still have time, move on to bonus material!
 
 ## Exercise 7 - Configure Load Balancing
-Now that there are multiple instances of your pods, you will want load balancing between them. This way a client can call a single hostname and will be routed to a healthy pod replica. This is done in CaaS though a Service object and a Route object.
+Now that there are multiple instances of your pods, you will want load balancing between them. This way a client can call a single hostname and will be routed to a healthy pod replica. This is done in K8S though a Service object and a Route object.
 
 The Service object is a load balancer. The Service appears as a single IP to clients and load balances inbound traffic to multiple endpoints where your pod instances are the endpoints.
 
@@ -10,7 +10,7 @@ The Route object exposes a Service object as an externally-reachable hostname.
 
 You'll create the Service object first. Review the `service.yaml` manifest file.
 
-Again, in the `metadata` section, edit the Service's `name` value and the `app` label value to something unique by replacing `glits` with your CDSID. For example, I use `name: jpotte46-service` and `jpotte46-app`. Also, in the `spec` section, edit the value of `selector.app` by replacing `glits` with your CDSID.
+Again, in the `metadata` section, edit the Service's `name` value and the `app` label value to something unique by replacing `lab` with your ID. For example, I use `name: jpotte46-service` and `jpotte46-app`. Also, in the `spec` section, edit the value of `selector.app` by replacing `lab` with your ID.
 
 Note the value of `selector.app` should equal the value of your Pods' `app` label. Configuring the selector this way will associate this Service with those Pods. Inbound traffic to this Service will be forwarded to associated Pods. **Save the file.**
 
@@ -40,15 +40,15 @@ done
 ```
 ## Exercise 8
 
-Now that your have a single IP address for your app, you will want to provide an externally-reachable hostname. At Ford, we do this with an OpenShift Route object.
+Now that your have a single IP address for your app, you will want to provide an externally-reachable hostname. Here, we do this with an OpenShift Route object.
 
 Review the `route.yaml` manifest file.
 
-In the `metadata` section, edit the Route's `name` value and the `app` label value to something unique by replacing `glits` with your CDSID. For example, I use `name: jpotte46-route` and `jpotte46-app`.
+In the `metadata` section, edit the Route's `name` value and the `app` label value to something unique by replacing `lab` with your ID. For example, I use `name: jpotte46-route` and `jpotte46-app`.
 
-In the `spec` section, edit the value of `host` by replacing `glits` with your CDSID. For example, I use `host: jpotte46-app.app.caas.ford.com`. This causes traffic sent to this hostname to be serviced by this Route object.
+In the `spec` section, edit the value of `host` by replacing `lab` with your ID. For example, I use `host: jpotte46-app.app.caas.ford.com`. This causes traffic sent to this hostname to be serviced by this Route object.
 
-In the `spec` section, edit the value of `to.name` by replacing `glits` with your CDSID. Note the value of `to.name` should equal the value of your Service's `name`. This will associate this Route with your Service. **Save the file.**
+In the `spec` section, edit the value of `to.name` by replacing `lab` with your ID. Note the value of `to.name` should equal the value of your Service's `name`. This will associate this Route with your Service. **Save the file.**
 
 ```
 # Create the route

@@ -1,13 +1,13 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: glits-service # <--- Rename the service
+  name: lab-service # <--- Rename the service
   labels:
-    app: glits-app # <------ Rename the label
+    app: lab-app # <------ Rename the label
 spec:
   type: ClusterIP
   selector:
-    app: glits-app # <------ Rename to match your pods' label
+    app: lab-app # <------ Rename to match your pods' label
   ports:
   - name: http
     protocol: "TCP"

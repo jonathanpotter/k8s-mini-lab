@@ -1,25 +1,25 @@
-# Getting Your Hands-On CaaS
+# Getting Your Hands-On K8S
 
-This is a hands-on lab where you will learn the basics of deploying containerized applications on the CaaS platform.  We’ll provide a live CaaS environment where you can deploy something small, scale it up, then deploy a new version without downtime.
+This is a hands-on lab where you will learn the basics of deploying containerized applications on the K8S platform.  We’ll provide a live K8S environment where you can deploy something small, scale it up, then deploy a new version without downtime.
 
 ## Pre-requisites
-- Laptop with Ford GitHub access and permissions to download/run an `.exe` file.
+- Laptop with GitHub access and permissions to download/run an `.exe` file.
 - Familiarity with command-line activities (moving files, setting `PATH` environment variable, cloning a git repo, etc...)
 
 ## Exercise 1 - Clone the Lab Repo
-Clone the [glits-lab](https://github.ford.com/JPOTTE46/glits-lab) git repo.
+Clone this repo.
 
 Cheatsheet:
 ```
 cd ~/workspace
-git clone git@github.ford.com:JPOTTE46/glits-lab.git
-cd ./glits-lab
+git clone git@github.com:jonathanpotter/k8s-mini-lab.git
+cd ./k8s-mini-lab
 ```
 
 ## Exercise 2 - Install RedHat OpenShift Command-Line Interface
-You need to install the `oc` cli in order to issue commands to CaaS.
+You need to install the `oc` cli in order to issue commands to K8S.
 
-- Download version `3.11.135` from https://files.caas.ford.com:9443/oc-cli/. Select the file with the name matching your system: Windows, MacOS, or Linux.
+- Download `oc`. Select the file with the name matching your system: Windows, MacOS, or Linux.
 - For Windows
   - Open the downloaded zip file.
   - Copy the executable binary `oc.exe` somewhere on your system.
@@ -41,15 +41,15 @@ oc version
     features: Basic-Auth
 ```
 
-## Exercise 3 - Authenticate to CaaS
-Authenticate to Ford's CaaS platform with `oc`.
+## Exercise 3 - Authenticate to K8S
+Authenticate to our K8S platform with `oc`.
 
-You have been granted temporary access to an environment on Ford's CaaS platform. You can login with your CDSID and password. Then target the `devenablement-dev` project.
+You have been granted temporary access to a lab environment on our K8S platform. You can login with your network ID and password. Then target the `devenablement-dev` project.
 
 ```
-# Login to CaaS.
+# Login to K8S.
 # If you get "error: Service Unavailable", then you have a proxy error. Raise your hand for help.
-oc login https://api.caas.ford.com
+oc login https://api.k8s.company.com
 # Your username
 # Your password
 
@@ -57,15 +57,15 @@ oc login https://api.caas.ford.com
 oc project devenablement-dev
 ```
 
-If you are using GitBash on Windows, the `oc` cli has a bug where it outputs your password to the terminal. You can avoid this with the `winpty` utility replacing the command above with `winpty oc login https://api.caas.ford.com`.
+If you are using GitBash on Windows, the `oc` cli has a bug where it outputs your password to the terminal. You can avoid this with the `winpty` utility replacing the command above with `winpty oc login https://api.k8s.company.com`.
 
-## Review of Ford's Container Image Registry
-Ford's Container Image Registry is at https://registry.ford.com. Note that you will not have access to it until you sign up when you procure your CaaS environment. However, for this lab, I have already created a [container image](https://registry.ford.com/repository/jpotte46/springboot-hello-world) for you and uploaded it. The image contains a minimal "Hello World" web service.
+## Review of The Container Image Registry
+Our Container Image Registry is at https://registry.company.com. Note that you will not have access to it until you sign up when you procure your K8S environment. However, for this lab, I have already created a [container image](https://registry.company.com/repository/jpotte46/springboot-hello-world) for you and uploaded it. The image contains a minimal "Hello World" web service.
 
 ## Exercise 4 - Create a Pod
-You will deploy the container image to CaaS using a Pod object type. Review the `pod.yaml` manifest file.
+You will deploy the container image to K8S using a Pod object type. Review the `pod.yaml` manifest file.
 
-In the `metadata` section, edit the Pod's `name` value and the `app` label value to something unique by replacing `glits` with your CDSID. For example, I use `name: jpotte46-pod` and `jpotte46-app`. **Save the file.**
+In the `metadata` section, edit the Pod's `name` value and the `app` label value to something unique by replacing `lab` with your ID. **Save the file.**
 
 ```
 # Deploy your pod.
@@ -101,11 +101,11 @@ oc delete pod YOUR_POD_NAME
 ```
 
 ## Exercise 5 - Create a Deployment
-Pods can fail. If they do, they will not recover themselves; however, CaaS will automatically recover from a Pod failure using a Deployment controller object. With a Deployment, you declaratively specify your desired state, and CaaS will continually monitor current state and make changes as needed to maintain your desired state.
+Pods can fail. If they do, they will not recover themselves; however, K8S will automatically recover from a Pod failure using a Deployment controller object. With a Deployment, you declaratively specify your desired state, and K8S will continually monitor current state and make changes as needed to maintain your desired state.
 
 Review the `deployment.yaml` manifest file.
 
-Again, in the `metadata` section, edit the Deployment's `name` value and the `app` label value to something unique by replacing `glits` with your CDSID. For example, I use `name: jpotte46-deployment` and `jpotte46-app`. Also, in the `spec` section, edit the values of `selector.matchLabels.app` and `template.metadata.labels.app` replace `glits` with your CDSID. **Save the file.**
+Again, in the `metadata` section, edit the Deployment's `name` value and the `app` label value to something unique by replacing `lab` with your ID. For example, I use `name: jpotte46-deployment` and `jpotte46-app`. Also, in the `spec` section, edit the values of `selector.matchLabels.app` and `template.metadata.labels.app` replace `lab` with your ID. **Save the file.**
 
 ```
 # Create the deployment
@@ -128,13 +128,13 @@ curl 19.2.28.230:8080/api/v1/hello
     {"result":{"greeting":"Hello from pod 19.2.28.230"},"error":null}
 ```
 
-Now open a new terminal window where you will watch the pod be deleted. CaaS will then start a new pod to replace the one that you deleted.
+Now open a new terminal window where you will watch the pod be deleted. K8S will then start a new pod to replace the one that you deleted.
 
 ```
 # Watch pods in new terminal.
 oc get pods -l app=YOUR_APP_NAME -w
 
-# In the original terminal, delete a running pod and CaaS will recreate it.
+# In the original terminal, delete a running pod and K8S will recreate it.
 oc delete pod YOUR_POD_NAME
 ```
 
@@ -152,4 +152,4 @@ oc get pods -l app=YOUR_APP_NAME
 ```
 
 ## Free Workshop
-You can learn more by attending the free CaaS Workshop. Register [online](https://it2.spt.ford.com/sites/dev/Lists/RegisterForEvent/newform.aspx). The workshop is offered monthly.
+You can learn more by attending the free K8S Workshop. Register [online](https://workshop-link.com). The workshop is offered monthly.

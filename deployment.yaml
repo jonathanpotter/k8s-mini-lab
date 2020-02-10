@@ -1,18 +1,18 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: glits-deployment # <----- Rename the deployment
+  name: lab-deployment # <----- Rename the deployment
   labels:
-    app: glits-app # <----------- Rename the label
+    app: lab-app # <----------- Rename the label
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: glits-app # <--------- Rename the label
+      app: lab-app # <--------- Rename the label
   template:
     metadata:
       labels:
-        app: glits-app # <------- Rename the label
+        app: lab-app # <------- Rename the label
     spec:
       serviceAccountName: default
       dnsPolicy: ClusterFirst
@@ -21,7 +21,7 @@ spec:
       containers:
       - name: springboot-container
         # image will be pulled from localdev Docker Registry if present
-        image: registry.ford.com/jpotte46/springboot-hello-world:0.0.1
+        image: registry.company.com/jpotte46/springboot-hello-world:0.0.1
         ports:
           - containerPort: 8080
             name: http
